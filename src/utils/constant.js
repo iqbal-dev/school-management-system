@@ -1,2 +1,7 @@
-export const gender = ["male", "female"];
-export const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+const gender = ["Male", "Female"];
+const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+module.exports = {
+  gender,
+  bloodGroup,
+};

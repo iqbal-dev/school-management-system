@@ -2,9 +2,13 @@ const User = require("../../model/User");
 const defaults = require("../../config/defaults");
 const { badRequest } = require("../../utils/error");
 
-const findUserByEmail = async (email) => {
-  const user = await User.findOne({ email });
+const findUserById = async (id) => {
+  const user = await User.findOne({ id });
   return user ? user : false;
+};
+
+const updateUserById = async (id, updateData) => {
+  const user = await User.findOneAndUpdate({ id }, { ...updateData });
 };
 
 const userExist = async (email) => {
@@ -12,11 +16,18 @@ const userExist = async (email) => {
   return user ? true : false;
 };
 
-const createUser = async ({ name, email, password }) => {
-  if (!name || !email || !password) throw badRequest("Invalid parameters");
+/**
+ *
+ * @param {object} user
+ * @param {string} [user.id] - user id
+ * @param {string} [user.role] - user role
+ * @param {string} [user.password] - user password
+ * @returns
+ */
+const createUser = async ({ id, role, password, student }) => {
+  if (!id || !password || !role) throw badRequest("Invalid parameters");
 
-  const user = new User({ name, email, password });
-  await user.save();
+  const user = await User.create({ id, password, role, student });
 
   return { ...user._doc, id: user.id };
 };
@@ -91,8 +102,9 @@ const create = async ({
 
 module.exports = {
   userExist,
-  findUserByEmail,
+  findUserById,
   createUser,
+  updateUserById,
   findAllItems,
   create,
   count,

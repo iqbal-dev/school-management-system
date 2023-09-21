@@ -126,7 +126,7 @@ paths:
           $ref: "#/components/responses/400"
         "500":
           "$ref": "#/components/responses/500"
-  "/Students":
+  "/students":
     get:
       tags: [Admin]
       description: Retrive all Students
@@ -211,7 +211,6 @@ paths:
                 dob:
                   type: string
                   format: date-time
-                  example: 2023-11-1997
                 email:
                   type: string
                   format: email
@@ -244,8 +243,6 @@ paths:
                   example: draft
               required:
                 [
-                  classId,
-                  sectionId,
                   name,
                   gender,
                   dob,
@@ -347,7 +344,6 @@ paths:
                 dob:
                   type: string
                   format: date-time
-                  example: 2023-11-1997
                 email:
                   type: string
                   format: email
@@ -444,7 +440,6 @@ paths:
                 dob:
                   type: string
                   format: date-time
-                  example: 2023-11-1997
                 email:
                   type: string
                   format: email
@@ -1938,7 +1933,6 @@ components:
             dob:
               type: string
               format: date-time
-              example: 2023-11-1997
             email:
               type: string
               format: email

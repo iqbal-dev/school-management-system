@@ -27,6 +27,20 @@ const authorizationError = (msg = "Permission Denied") => {
   error.status = 403;
   return error;
 };
+const handleValidationError = (error) => {
+  const errors = Object.values(error.errors).map((el) => {
+    return {
+      path: el?.path,
+      message: el?.message,
+    };
+  });
+  const statusCode = 400;
+  return {
+    statusCode,
+    message: "Validation Error",
+    data: errors,
+  };
+};
 
 module.exports = {
   notFound,
@@ -34,4 +48,5 @@ module.exports = {
   serverError,
   authenticationError,
   authorizationError,
+  handleValidationError,
 };
