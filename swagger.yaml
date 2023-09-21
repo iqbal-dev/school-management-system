@@ -1,0 +1,2770 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "School Management - Api"
+  description: "This is the first professional api project we creating in full-stack army. This is a simple school managaement system where manage Studentt, teacher, calss and routine."
+  contact:
+    name: Md IQbal Hossain
+    url: https://md-iqbal.netlify.com
+    email: mdiqbal.hossain0022@gmail.com
+servers:
+  - description: Dev
+    url: "http://localhost:4000/api/v1"
+tags:
+  - name: Auth
+    description: Authentication Endpoints (Private)
+  - name: Student
+    description: Student Endpoints (private)
+  - name: Teacher
+    description: Teacher Endpoints (Private)
+  - name: Admin
+    description: User Endpoints (admin only)
+paths:
+  "/auth/register":
+    post:
+      description: create a new account
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Abdullah Alamin
+                email:
+                  type: string
+                  format: email
+                  example: alamin@example.com
+                password:
+                  type: string
+                  format: password
+                  example: PassWord123
+              required: [name, email, password]
+      responses:
+        "201":
+          description: Signup successul
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Signup successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signup"
+                      signin:
+                        type: string
+                        example: "/auth/signin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/auth/login":
+    post:
+      description: Login to your account
+      tags: [Auth]
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+
+                  example: 01792119624
+                password:
+                  type: string
+                  format: password
+                  example: PassWord123
+              required: [email, password]
+      responses:
+        "200":
+          description: Signin successul
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 200
+                  message:
+                    type: string
+                    example: Signin successful
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/auth/signin"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/Students":
+    get:
+      tags: [Admin]
+      description: Retrive all Students
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+        - $ref: "#/components/parameters/class"
+      responses:
+        "200":
+          description: Return a list of Students
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Student"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/Students?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/Students?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/Students?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+    post:
+      operationId: createStudent
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Student
+      requestBody:
+        description: To create a new Student user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                classId:
+                  type: integer
+                  format: int32
+                  example: 1
+                sectionId:
+                  type: integer
+                  format: int32
+                  example: 1
+                name:
+                  type: string
+                  example: Md Iqbal Hossain
+                gender:
+                  type: string
+                  enum:
+                    - Male
+                    - Female
+                  example: Male
+                profileImage:
+                  type: string
+                  format: url
+                  example: https://s3.aws.example.com/23nds
+                dob:
+                  type: string
+                  format: date-time
+                  example: 2023-11-1997
+                email:
+                  type: string
+                  format: email
+                  example: iqbal@gmail.com
+                contactNo:
+                  type: string
+                  example: 01792119624
+                emergencyContactNo:
+                  type: string
+                  example: 01792119624
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
+                guardian:
+                  $ref: "#/components/schemas/Guardian"
+                localGuardian:
+                  $ref: "#/components/schemas/LocalGuardian"
+                status:
+                  type: string
+                  enum: [draft, published]
+                  example: draft
+              required:
+                [
+                  classId,
+                  sectionId,
+                  name,
+                  gender,
+                  dob,
+                  contactNo,
+                  emergencyContactNo,
+                  guardian,
+                  localGuardian,
+                  status,
+                ]
+      responses:
+        "201":
+          description: Successfully created a new Student
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/StudentCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  "/student/{id}":
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Student]
+      description: Fetch a single Student
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "200":
+          description: "Single Student view"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Student"
+                      - type: object
+                        properties:
+                          section:
+                            $ref: "#/components/schemas/Section"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/Students/1"
+                      section:
+                        type: string
+                        example: "/Students/1/sections"
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Student]
+      description: Create or update entire Student
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int32
+                  example: 1
+                classId:
+                  type: integer
+                  format: int32
+                  example: 1
+                sectionId:
+                  type: integer
+                  format: int32
+                  example: 1
+                name:
+                  type: string
+                  example: Md Iqbal Hossain
+                gender:
+                  type: string
+                  enum:
+                    - Male
+                    - Female
+                  example: Male
+                profileImage:
+                  type: string
+                  format: url
+                  example: https://s3.aws.example.com/23nds
+                dob:
+                  type: string
+                  format: date-time
+                  example: 2023-11-1997
+                email:
+                  type: string
+                  format: email
+                  example: iqbal@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01792119624
+                emergencyContactNo:
+                  type: string
+
+                  example: 01792119624
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
+                guardian:
+                  $ref: "#/components/schemas/Guardian"
+                localGuardian:
+                  $ref: "#/components/schemas/LocalGuardian"
+              required:
+                [
+                  classId,
+                  sectionId,
+                  name,
+                  gender,
+                  dob,
+                  contactNo,
+                  emergencyContactNo,
+                  guardian,
+                  localGuardian,
+                ]
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/StudentUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/StudentCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Student]
+      description: Partially update an Student
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                classId:
+                  type: integer
+                  format: int32
+                  example: 1
+                sectionId:
+                  type: integer
+                  format: int32
+                  example: 1
+                name:
+                  type: string
+                  example: Md Iqbal Hossain
+                gender:
+                  type: string
+                  enum:
+                    - Male
+                    - Female
+                  example: Male
+                profileImage:
+                  type: string
+                  format: url
+                  example: https://s3.aws.example.com/23nds
+                dob:
+                  type: string
+                  format: date-time
+                  example: 2023-11-1997
+                email:
+                  type: string
+                  format: email
+                  example: iqbal@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01792119624
+                emergencyContactNo:
+                  type: string
+
+                  example: 01792119624
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
+                guardian:
+                  type: object
+                  properties:
+                    fatherName:
+                      type: string
+
+                      example: Mubarak Hossain
+                    fatherOccupation:
+                      type: string
+
+                      example: Farmer
+                    fatherContactNo:
+                      type: string
+
+                      example: 01759826983
+                    motherName:
+                      type: string
+
+                      example: Mubarak Hossain
+                    motherOccupation:
+                      type: string
+
+                      example: Farmer
+                    motherContactNo:
+                      type: string
+
+                      example: 0179276453478
+                    address:
+                      type: string
+
+                      example: moheshpur, bitghar, nobinagar, brahmanbaria
+                localGuardian:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+
+                      example: Mubarak Hossain
+                    occupation:
+                      type: string
+
+                      example: Farmer
+                    contactNo:
+                      type: string
+
+                      example: 01759826983
+                    address:
+                      type: string
+
+                      example: ka-205/2, kuril, dhaka-1229
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/StudentUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/teachers":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Teacher
+      requestBody:
+        description: To create a new Teacher user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: fazlul haque
+                role:
+                  type: string
+                  enum: [Student, Teacher, Admin]
+                  example: Admin
+                progileImage:
+                  type: string
+                  format: url
+                password:
+                  type: string
+                  format: password
+                  example: password123
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                phone:
+                  type: string
+
+                  example: 01793229725
+                emergencyContactNo:
+                  type: string
+
+                  example: 01892339726
+                dob:
+                  type: string
+                  format: date-time
+                gender:
+                  type: string
+                  enum:
+                    - Male
+                    - Female
+                  example: Male
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
+                presentAddress:
+                  type: string
+                  format: address
+                  example: moheshpur, bitghar, brahmanbaria
+                permanentAddress:
+                  type: string
+                  format: address
+                  example: moheshpur, bitghar, brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+              required:
+                - name
+                - role
+                - password
+                - email
+                - phone
+                - emergencyContactNo
+                - dob
+                - gender
+                - presentAddress
+                - permanentAddress
+                - designation
+
+      responses:
+        "201":
+          description: Successfully created a new teacher
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/TeacherCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      tags: [Admin]
+      description: Retrive all Students
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+        - $ref: "#/components/parameters/class"
+      responses:
+        "200":
+          description: "Return all teachers"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Teacher"
+                        - type: object
+                          properties:
+                            sections:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  sectionName:
+                                    type: string
+
+                                    example: A
+                                  routines:
+                                    $ref: "#/components/schemas/Routines"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/students?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/students?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/students?page=1&limit=10"
+  "/teacher/{id}":
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Teacher]
+      description: Fetch a single Student
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "200":
+          description: "Single Student view"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Teacher"
+                      - type: object
+                        properties:
+                          section:
+                            $ref: "#/components/schemas/Section"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/teacher/1"
+                      section:
+                        type: string
+                        example: "/teacher/1/section"
+                      routine:
+                        type: string
+                        example: "/teacher/1/routines"
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Teacher]
+      description: Create or update entire Teacher
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: Fazlul karim
+                profileImage:
+                  type: string
+                  format: url
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01287783648
+                gender:
+                  type: string
+                  enum: [Male, Female]
+                  example: Male
+                presentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                permanentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+              required:
+                - name
+                - role
+                - password
+                - email
+                - phone
+                - emergencyContactNo
+                - dob
+                - gender
+                - presentAddress
+                - permanentAddress
+                - designation
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/TeacherUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/TeacherCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Teacher]
+      description: Partially update an Teacher
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: Fazlul karim
+                profileImage:
+                  type: string
+                  format: url
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01287783648
+                gender:
+                  type: string
+                  enum: [Male, Female]
+                  example: Male
+                presentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                permanentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/TeacherUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/admins":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Admin
+      requestBody:
+        description: To create a new Admin user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: fazlul haque
+                role:
+                  type: string
+                  enum: [Student, Teacher, Admin]
+                  example: Admin
+                progileImage:
+                  type: string
+                  format: url
+                password:
+                  type: string
+                  format: password
+                  example: password123
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                phone:
+                  type: string
+
+                  example: 01793229725
+                emergencyContactNo:
+                  type: string
+
+                  example: 01892339726
+                dob:
+                  type: string
+                  format: date-time
+                gender:
+                  type: string
+                  enum:
+                    - Male
+                    - Female
+                  example: Male
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
+                presentAddress:
+                  type: string
+                  format: address
+                  example: moheshpur, bitghar, brahmanbaria
+                permanentAddress:
+                  type: string
+                  format: address
+                  example: moheshpur, bitghar, brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+              required:
+                - name
+                - role
+                - password
+                - email
+                - phone
+                - emergencyContactNo
+                - dob
+                - gender
+                - presentAddress
+                - permanentAddress
+                - designation
+
+      responses:
+        "201":
+          description: Successfully created a new Admin
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AdminCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      tags: [Admin]
+      description: Retrive all Students
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: "Return all teachers"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Admin"
+                        - type: object
+                          properties:
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+
+                                  example: "/admins/1"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/students?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/students?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/students?page=1&limit=10"
+  "/admins/{id}":
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Fetch a single Admin
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "200":
+          description: "Single Admin view"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Admin"
+                      - $ref: "#/components/schemas/Timestamp"
+                      - type: object
+                        properties:
+                          links:
+                            type: object
+                            properties:
+                              self:
+                                type: string
+                                example: "/teacher/1"
+                              section:
+                                type: string
+                                example: "/teacher/1/section"
+                              routine:
+                                type: string
+                                example: "/teacher/1/routines"
+
+        "400":
+          $ref: "#/components/responses/400"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Admin
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: Fazlul karim
+                profileImage:
+                  type: string
+                  format: url
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01287783648
+                gender:
+                  type: string
+                  enum: [Male, Female]
+                  example: Male
+                presentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                permanentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+              required:
+                - name
+                - role
+                - password
+                - email
+                - phone
+                - emergencyContactNo
+                - dob
+                - gender
+                - presentAddress
+                - permanentAddress
+                - designation
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AdminUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AdminCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Partially update an Admin
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: Fazlul karim
+                profileImage:
+                  type: string
+                  format: url
+                email:
+                  type: string
+                  format: email
+                  example: fazlul@gmail.com
+                contactNo:
+                  type: string
+
+                  example: 01287783648
+                gender:
+                  type: string
+                  enum: [Male, Female]
+                  example: Male
+                presentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                permanentAddress:
+                  type: string
+
+                  example: Bitghar, Brahmanbaria
+                designation:
+                  type: string
+
+                  example: Head Teacher
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/AdminUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/subjects":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Admin
+      requestBody:
+        description: To create a new Admin user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                subjectName:
+                  type: string
+
+                  example: English
+      responses:
+        "201":
+          description: Successfully created a new Subject
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SubjectCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Admin
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: "Return all teachers"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Subject"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/subjects?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/subjects?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/subjects?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/subjects/{id}":
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Teacher
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                  example: Fazlul karim
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SubjectUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SubjectCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Delete an Student by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Student deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/classes":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Class
+      requestBody:
+        description: To create a new Class user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                className:
+                  type: string
+
+                  example: Seven
+      responses:
+        "201":
+          description: Successfully created a new Class
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClassCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Class
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: "Return all classes"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Class"
+                        - $ref: "#/components/schemas/Timestamp"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/subjects?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/subjects?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/subjects?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/classes/{id}":
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Class
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                className:
+                  type: string
+
+                  example: Fazlul karim
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClassUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClassCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Delete an Student by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Student deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/sections":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new section
+      requestBody:
+        description: To create a new section user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                sectionName:
+                  type: string
+
+                  example: A
+                teacherId:
+                  type: string
+
+                  example: "7634wtfefywerqtwf"
+                year:
+                  type: string
+
+                  example: 2013
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - block
+                  example: active
+      responses:
+        "201":
+          description: Successfully created a new section
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SectionCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Class
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: "Return all sections"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Section"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/sections?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/sections?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/sections?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/sections/{id}":
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Class
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                sectionName:
+                  type: string
+
+                  example: B
+                year:
+                  type: string
+
+                  example: 2023
+                teacherId:
+                  type: string
+
+                  example: askdjfh4yo34
+              required:
+                - sectionName
+                - year
+                - teacherId
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SectionUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SectionCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Class
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                sectionName:
+                  type: string
+
+                  example: B
+                year:
+                  type: string
+
+                  example: 2023
+                teacherId:
+                  type: string
+
+                  example: askdjfh4yo34
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SectionUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Delete an section by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Student deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/routines":
+    post:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new routine
+      requestBody:
+        description: To create a new routine user must need to provide valid data
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+
+                  example: Saturday
+                teacherId:
+                  type: string
+
+                  example: "7634wtfefywerqtwf"
+                subjectId:
+                  type: string
+
+                  example: "kjadhf28yr4834y"
+                startTime:
+                  type: string
+                  format: time
+                  example: "10am"
+                endTime:
+                  type: string
+                  format: time
+                  example: "11-am"
+              required:
+                - day
+                - teacherId
+                - startTime
+                - endTime
+      responses:
+        "201":
+          description: Successfully created a new section
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RoutineCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    get:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create a new Routine
+      parameters:
+        - $ref: "#/components/parameters/pageParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/sortTypeParam"
+        - $ref: "#/components/parameters/sortByParam"
+        - $ref: "#/components/parameters/searchParam"
+      responses:
+        "200":
+          description: "Return all Routines"
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Routines"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/sections?page=2&limit=10"
+                      next:
+                        type: string
+                        format: url
+                        example: "/sections?page=3&limit=10"
+                      prev:
+                        type: string
+                        format: url
+                        example: "/sections?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
+  "/routines/{id}":
+    put:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Routine
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+
+                  example: Saturday
+                teacherId:
+                  type: string
+
+                  example: "7634wtfefywerqtwf"
+                subjectId:
+                  type: string
+
+                  example: "kjadhf28yr4834y"
+                startTime:
+                  type: string
+                  format: time
+                  example: "10am"
+                endTime:
+                  type: string
+                  format: time
+                  example: "11-am"
+              required:
+                - day
+                - teacherId
+                - startTime
+                - endTime
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RoutineUpdateDTO"
+        "201":
+          description: "Successfully Created"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RoutineCreateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Create or update entire Routine
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              type: object
+              properties:
+                day:
+                  type: string
+
+                  example: Saturday
+                teacherId:
+                  type: string
+
+                  example: "7634wtfefywerqtwf"
+                subjectId:
+                  type: string
+
+                  example: "kjadhf28yr4834y"
+                startTime:
+                  type: string
+                  format: time
+                  example: "10am"
+                endTime:
+                  type: string
+                  format: time
+                  example: "11-am"
+      responses:
+        "200":
+          description: "Successfully Updated"
+          content: &Student_update_content
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RoutineUpdateDTO"
+        "400":
+          $ref: "#/components/responses/400"
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Delete an section by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Student deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  "/users/{id}":
+    delete:
+      security:
+        - bearerAuth: []
+      tags: [Admin]
+      description: Delete an Class by id
+      parameters:
+        - $ref: "#/components/parameters/idPathParam"
+      responses:
+        "204":
+          description: "Student deleted successfully"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      allOf:
+        - type: object
+          properties:
+            role:
+              type: string
+              enum:
+                - Admin
+                - Student
+                - Teacher
+            password:
+              type: string
+              example: password123
+            status:
+              type: string
+              enum:
+                - Active
+                - Block
+          required:
+            - role
+            - password
+            - status
+        - $ref: "#/components/schemas/Timestamp"
+    Student:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            userId:
+              type: integer
+              format: int32
+              example: 1
+            classId:
+              type: integer
+              format: int32
+              example: 1
+            sectionId:
+              type: integer
+              format: int32
+              example: 1
+            name:
+              type: string
+              example: Md Iqbal Hossain
+            gender:
+              type: string
+              enum:
+                - Male
+                - Female
+              example: Male
+            profileImage:
+              type: string
+              format: url
+              example: https://s3.aws.example.com/23nds
+            dob:
+              type: string
+              format: date-time
+              example: 2023-11-1997
+            email:
+              type: string
+              format: email
+              example: iqbal@gmail.com
+            contactNo:
+              type: string
+
+              example: 01792119624
+            emergencyContactNo:
+              type: string
+
+              example: 01792119624
+            bloodGroup:
+              type: string
+              enum:
+                - A+
+                - A-
+                - B+
+                - B-
+                - AB+
+                - AB-
+                - O+
+                - O-
+              example: A+
+            guardian:
+              $ref: "#/components/schemas/Guardian"
+            localGuardian:
+              $ref: "#/components/schemas/LocalGuardian"
+            status:
+              type: string
+              enum: [draft, published]
+              example: draft
+          required: [id, authorId, title, body, status]
+        - $ref: "#/components/schemas/Timestamp"
+    Guardian:
+      type: object
+      properties:
+        fatherName:
+          type: string
+
+          example: Mubarak Hossain
+        fatherOccupation:
+          type: string
+
+          example: Farmer
+        fatherContactNo:
+          type: string
+
+          example: 01759826983
+        motherName:
+          type: string
+
+          example: Mubarak Hossain
+        motherOccupation:
+          type: string
+
+          example: Farmer
+        motherContactNo:
+          type: string
+
+          example: 0179276453478
+        address:
+          type: string
+
+          example: moheshpur, bitghar, nobinagar, brahmanbaria
+      required:
+        [
+          fatherName,
+          fatherOccupation,
+          fatherContactNo,
+          motherName,
+          motherOccupation,
+          motherContactNo,
+          address,
+        ]
+    LocalGuardian:
+      type: object
+      properties:
+        name:
+          type: string
+
+          example: Mubarak Hossain
+        occupation:
+          type: string
+
+          example: Farmer
+        contactNo:
+          type: string
+
+          example: 01759826983
+        address:
+          type: string
+
+          example: ka-205/2, kuril, dhaka-1229
+      required: [name, occupation, contactNo, address]
+    Section:
+      allOf:
+        - type: object
+          properties:
+            sectionName:
+              type: string
+
+              example: A
+            year:
+              type: string
+
+              example: 2023
+            classTeacherId:
+              type: string
+              example: "938hdwevbiweygr"
+        - $ref: "#/components/schemas/Timestamp"
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        name:
+          type: string
+
+          example: Fazlul karim
+        profileImage:
+          type: string
+          format: url
+        email:
+          type: string
+          format: email
+          example: fazlul@gmail.com
+        contactNo:
+          type: string
+
+          example: 01287783648
+        gender:
+          type: string
+          enum: [Male, Female]
+          example: Male
+        presentAddress:
+          type: string
+
+          example: Bitghar, Brahmanbaria
+        permanentAddress:
+          type: string
+
+          example: Bitghar, Brahmanbaria
+        designation:
+          type: string
+
+          example: Head Teacher
+      required:
+        - id
+        - name
+        - role
+        - password
+        - email
+        - phone
+        - emergencyContactNo
+        - dob
+        - gender
+        - presentAddress
+        - permanentAddress
+        - designation
+    Admin:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        name:
+          type: string
+
+          example: Fazlul karim
+        profileImage:
+          type: string
+          format: url
+        email:
+          type: string
+          format: email
+          example: fazlul@gmail.com
+        contactNo:
+          type: string
+
+          example: 01287783648
+        gender:
+          type: string
+          enum: [Male, Female]
+          example: Male
+        presentAddress:
+          type: string
+
+          example: Bitghar, Brahmanbaria
+        permanentAddress:
+          type: string
+
+          example: Bitghar, Brahmanbaria
+        designation:
+          type: string
+
+          example: Head Teacher
+      required:
+        - id
+        - name
+        - role
+        - password
+        - email
+        - phone
+        - emergencyContactNo
+        - dob
+        - gender
+        - presentAddress
+        - permanentAddress
+        - designation
+    Subject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            subjectName:
+              type: string
+
+              example: English
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  format: url
+                  example: "/subject/1"
+          required: [id, subjectName]
+        - $ref: "#/components/schemas/Timestamp"
+    Class:
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              example: 1
+            className:
+              type: string
+
+              example: Seven
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  format: url
+                  example: "/class/1"
+          required: [id, className]
+        - $ref: "#/components/schemas/Timestamp"
+    Routine:
+      allOf:
+        - type: object
+          properties:
+            time:
+              type: string
+              format: time
+              example: 10-11am
+            subject:
+              type: string
+
+              example: English
+            teacherId:
+              type: string
+
+              example: jksfdfjsdfkj
+            links:
+              type: object
+              properties:
+                self:
+                  type: string
+                  format: time
+                  example: "/routines/1"
+                teacher:
+                  type: string
+
+                  example: "/routines/1/teacher"
+                secion:
+                  type: string
+
+                  example: "/routines/section"
+        - $ref: "#/components/schemas/Timestamp"
+      required:
+        - time
+        - subject
+        - teacherId
+    Routines:
+      type: object
+      properties:
+        Saturday:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Routine"
+              - type: object
+                properties:
+                  teacher:
+                    $ref: "#/components/schemas/Teacher"
+        Sunday:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Routine"
+              - type: object
+                properties:
+                  teacher:
+                    $ref: "#/components/schemas/Teacher"
+    ClassCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Student created successfully"
+        data:
+          $ref: "#/components/schemas/Class"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/sections/1"
+            routine:
+              type: string
+              format: url
+              example: "/sections/1/routines"
+            class:
+              type: string
+              format: url
+              example: "/sections/1/class"
+    ClassUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Student updated successfully"
+        data:
+          $ref: "#/components/schemas/Class"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/sections/1"
+            routine:
+              type: string
+              format: url
+              example: "/sections/1/routines"
+            class:
+              type: string
+              format: url
+              example: "/sections/1/class"
+    SectionCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Student created successfully"
+        data:
+          $ref: "#/components/schemas/Section"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/sections/1"
+            routine:
+              type: string
+              format: url
+              example: "/sections/1/routines"
+            class:
+              type: string
+              format: url
+              example: "/sections/1/class"
+    SectionUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Student updated successfully"
+        data:
+          $ref: "#/components/schemas/Section"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/sections/1"
+            routine:
+              type: string
+              format: url
+              example: "/sections/1/routines"
+            class:
+              type: string
+              format: url
+              example: "/sections/1/class"
+    StudentCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Student created successfully"
+        data:
+          $ref: "#/components/schemas/Student"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/Students/1"
+            author:
+              type: string
+              format: url
+              example: "/Students/1/author"
+            comments:
+              type: string
+              format: url
+              example: "/Students/1/comments"
+    StudentUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Student updated successfully
+        data:
+          $ref: "#/components/schemas/Student"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "/Students/1"
+    SubjectCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Student created successfully"
+        data:
+          $ref: "#/components/schemas/Subject"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/subjects/1"
+    SubjectUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Student update successfully"
+        data:
+          $ref: "#/components/schemas/Subject"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/subjects/1"
+    TeacherCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Teacher created successfully"
+        data:
+          $ref: "#/components/schemas/Teacher"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/teachers/1"
+            section:
+              type: string
+              format: url
+              example: "/teachers/1/seaction"
+            class:
+              type: string
+              format: url
+              example: "/teachers/1/class"
+            routine:
+              type: string
+              format: url
+              example: "/teachers/1/routines"
+    AdminCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: "Teacher created successfully"
+        data:
+          $ref: "#/components/schemas/Admin"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/admins/1"
+    AdminUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Teacher updated successfully"
+        data:
+          $ref: "#/components/schemas/Admin"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/admins/1"
+    TeacherUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: "Teacher updated successfully"
+        data:
+          $ref: "#/components/schemas/Teacher"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              format: url
+              example: "/teachers/1"
+            section:
+              type: string
+              format: url
+              example: "/teachers/1/seaction"
+            class:
+              type: string
+              format: url
+              example: "/teachers/1/class"
+            routine:
+              type: string
+              format: url
+              example: "/teachers/1/routines"
+    RoutineCreateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 201
+        message:
+          type: string
+          example: Student created successfully
+        data:
+          $ref: "#/components/schemas/Routine"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "/Students/1"
+    RoutineUpdateDTO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Student updated successfully
+        data:
+          $ref: "#/components/schemas/Routine"
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              example: "/Students/1"
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+    AuthorDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 1
+        name:
+          type: string
+          example: "A.B Raihan"
+      required: [id, name]
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 2
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        next:
+          type: integer
+          format: int32
+          example: 3
+        prev:
+          type: integer
+          format: int32
+          example: 1
+        totalPage:
+          type: integer
+          format: int32
+          example: 5
+        totalItems:
+          type: integer
+          format: int32
+          example: 50
+      required:
+        - page
+        - limit
+        - totalPage
+        - totalItems
+  responses:
+    "500":
+      description: "Internal Server Error"
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later
+    "400":
+      description: "Bad Request"
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: phone
+                    message:
+                      type: string
+                      example: Invalid phone
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    "401":
+      description: Unauthorized
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You don't have the right permissions
+    "404":
+      description: Resource Not Found
+      content:
+        "application/json":
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
+  parameters:
+    pageParam:
+      in: query
+      name: page
+      description: current page number
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 2
+    limitParam:
+      in: query
+      name: limit
+      description: maximum items to be returned
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 10
+    sortTypeParam:
+      in: query
+      name: sort_type
+      description: type of sort (asc or dsc)
+      schema:
+        type: string
+        enum: [asc, dsc]
+        example: dsc
+    sortByParam:
+      in: query
+      name: sort_by
+      description: Sort key
+      schema:
+        type: string
+        example: updatedAt
+    searchParam:
+      in: query
+      name: search
+      description: Search term
+      schema:
+        type: string
+        example: title
+    class:
+      in: query
+      name: class
+      description: Search term
+      schema:
+        type: number
+        example: 1
+    idPathParam:
+      in: path
+      name: id
+      required: true
+      description: Student ID
+      schema:
+        type: string
+        example: "64d268cdeef8c84bb18912db"
