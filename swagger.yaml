@@ -1318,10 +1318,9 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                subjectName:
                   type: string
-
-                  example: Fazlul karim
+                  example: Bangla
       responses:
         "200":
           description: "Successfully Updated"

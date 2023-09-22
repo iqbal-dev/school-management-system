@@ -14,6 +14,7 @@ router.route("/api/v1/teachers/:id").put(teacherController.updateItem);
 router.route("/api/v1/admins").post(adminController.create);
 router.route("/api/v1/admins/:id").put(adminController.updateItem);
 router.route("/api/v1/subjects").post(subjectController.create);
+router.route("/api/v1/subjects/:id").put(subjectController.updateItem);
 router.route("/api/v1/classes").post(classController.create);
 router.route("/api/v1/classes/:id").put(classController.updateItem);
 router.route("/api/v1/sections").post(sectionController.create);
