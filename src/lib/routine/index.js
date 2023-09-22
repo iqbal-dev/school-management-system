@@ -53,6 +53,17 @@ const routinesBySectionId = async (sectionId) => {
     id: routine.id,
   }));
 };
+const routinesByTeacherId = async (teacherId) => {
+  if (!teacherId) throw badRequest("teacherId is required");
+  const routines = await Routine.find({ teacher: teacherId })
+    .populate({ path: "teacher", select: "name" })
+    .populate({ path: "subject", select: "subjectName" })
+    .populate({ path: "section", select: "sectionName" });
+  return routines.map((routine) => ({
+    ...routine._doc,
+    id: routine.id,
+  }));
+};
 
 const create = async ({
   day,
@@ -120,4 +131,5 @@ module.exports = {
   findAllItems,
   count,
   routinesBySectionId,
+  routinesByTeacherId,
 };

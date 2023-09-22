@@ -3,6 +3,9 @@ const { Student, Teacher, User } = require("../../model");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 const defaults = require("../../config/defaults");
+const routineService = require("../routine");
+const { convertRoutine } = require("../../api/v1/routine/util");
+const teacherService = require("../section");
 const findAllItems = async ({
   page = defaults.page,
   limit = defaults.limit,
@@ -138,10 +141,28 @@ const updateOrCreate = async (
   return { data: { ...teacher._doc, id: teacher.id }, code: 200 };
 };
 
+const findSingleItem = async (id) => {
+  if (!id) throw new Error("Id is required");
+  const teacher = await Teacher.findOne({ _id: id });
+  if (!teacher) {
+    return false;
+  }
+  let routines = await routineService.routinesByTeacherId(id);
+  routines = convertRoutine(routines);
+  const sections = await teacherService.sectionsByTeacher(id);
+  return {
+    ...teacher._doc,
+    id: teacher.id,
+    sections: sections ?? [],
+    routines,
+  };
+};
+
 module.exports = {
   create,
   findOneById,
   updateOrCreate,
   findAllItems,
   count,
+  findSingleItem,
 };

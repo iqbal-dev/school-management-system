@@ -688,8 +688,12 @@ paths:
                       - $ref: "#/components/schemas/Teacher"
                       - type: object
                         properties:
-                          section:
-                            $ref: "#/components/schemas/Section"
+                          sections:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Section"
+                          routines:
+                            $ref: "#/components/schemas/Routines"
                   links:
                     type: object
                     properties:

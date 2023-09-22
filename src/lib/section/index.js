@@ -85,10 +85,21 @@ const updateOrCreate = async (
   await section.save();
   return { data: { ...section._doc, id: section.id }, code: 200 };
 };
+
+const sectionsByTeacher = async (teacherId) => {
+  if (!teacherId) throw new Error("Teacher id is required");
+  let sections = await Section.find({ teacher: teacherId });
+  sections = sections.map((section) => ({
+    ...section._doc,
+    id: section.id,
+  }));
+  return sections.length > 0 ? sections : false;
+};
 module.exports = {
   create,
   findOneById,
   updateOrCreate,
   findAllItems,
   count,
+  sectionsByTeacher,
 };
