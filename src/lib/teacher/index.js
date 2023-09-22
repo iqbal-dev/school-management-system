@@ -3,6 +3,37 @@ const { Student, Teacher, User } = require("../../model");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 
+const findAllItems = async ({
+  page = defaults.page,
+  limit = defaults.limit,
+  sortType = defaults.sortType,
+  sortBy = defaults.sortBy,
+  search = defaults.search,
+}) => {
+  const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  const teachers = await Teacher.find(filter)
+    .sort(sortStr)
+    .skip(page * limit - limit)
+    .limit(limit);
+
+  return teachers.map((student) => ({
+    ...student._doc,
+    id: student.id,
+  }));
+};
+
+const count = ({ search = "" }) => {
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  return Teacher.count(filter);
+};
+
 const create = async ({
   id,
   name,
@@ -111,4 +142,6 @@ module.exports = {
   create,
   findOneById,
   updateOrCreate,
+  findAllItems,
+  count,
 };
