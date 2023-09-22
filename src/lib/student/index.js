@@ -4,6 +4,9 @@ const Student = require("../../model/Student");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 const defaults = require("../../config/defaults");
+const { badRequest } = require("../../utils/error");
+const routineService = require("../routine");
+const { convertRoutine } = require("../../api/v1/routine/util");
 
 const findAllItems = async ({
   page = defaults.page,
@@ -168,9 +171,33 @@ const updateOrCreate = async (
   }
   return { data: { ...student._doc, id: student.id }, code: 200 };
 };
+
+const findSingleItem = async (id) => {
+  if (!id) throw badRequest("Id is required");
+  const student = await Student.findOne({ _id: id })
+    .populate({ path: "class", select: "className" })
+    .populate({ path: "section", select: "sectionName" });
+
+  if (!student) {
+    return false;
+  }
+  const routine = await routineService.routinesBySectionId(
+    student._doc.section
+  );
+  const routines = routine.length ? convertRoutine(routine) : [];
+  return {
+    ...student._doc,
+    id: student.id,
+    section: {
+      ...student._doc?.section._doc,
+      routines,
+    },
+  };
+};
 module.exports = {
   create,
   updateOrCreate,
   findAllItems,
   count,
+  findSingleItem,
 };

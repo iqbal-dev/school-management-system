@@ -288,7 +288,12 @@ paths:
                       - type: object
                         properties:
                           section:
-                            $ref: "#/components/schemas/Section"
+                            allOf:
+                              - $ref: "#/components/schemas/Section"
+                              - type: object
+                                properties:
+                                  routines:
+                                    $ref: "#/components/schemas/Routines"
                   links:
                     type: object
                     properties:
@@ -1016,46 +1021,6 @@ paths:
                         format: url
                         example: "/students?page=1&limit=10"
   "/admins/{id}":
-    get:
-      security:
-        - bearerAuth: []
-      tags: [Admin]
-      description: Fetch a single Admin
-      parameters:
-        - $ref: "#/components/parameters/idPathParam"
-      responses:
-        "200":
-          description: "Single Admin view"
-          content:
-            "application/json":
-              schema:
-                type: object
-                properties:
-                  data:
-                    allOf:
-                      - $ref: "#/components/schemas/Admin"
-                      - $ref: "#/components/schemas/Timestamp"
-                      - type: object
-                        properties:
-                          links:
-                            type: object
-                            properties:
-                              self:
-                                type: string
-                                example: "/teacher/1"
-                              section:
-                                type: string
-                                example: "/teacher/1/section"
-                              routine:
-                                type: string
-                                example: "/teacher/1/routines"
-
-        "400":
-          $ref: "#/components/responses/400"
-        "404":
-          $ref: "#/components/responses/404"
-        "500":
-          $ref: "#/components/responses/500"
     put:
       security:
         - bearerAuth: []

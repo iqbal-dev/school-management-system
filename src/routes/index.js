@@ -11,7 +11,10 @@ router
   .route("/api/v1/students")
   .post(studentController.create)
   .get(studentController.findAllItems);
-router.route("/api/v1/students/:id").put(studentController.updateItem);
+router
+  .route("/api/v1/students/:id")
+  .put(studentController.updateItem)
+  .get(studentController.findSingleItem);
 router
   .route("/api/v1/teachers")
   .post(teacherController.create)
