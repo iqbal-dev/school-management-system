@@ -20,5 +20,6 @@ router.route("/api/v1/classes/:id").put(classController.updateItem);
 router.route("/api/v1/sections").post(sectionController.create);
 router.route("/api/v1/sections/:id").put(sectionController.updateItem);
 router.route("/api/v1/routines").post(routineController.create);
+router.route("/api/v1/routines/:id").put(routineController.updateItem);
 
 module.exports = router;

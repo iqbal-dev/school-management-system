@@ -1812,11 +1812,12 @@ paths:
                   example: Saturday
                 teacherId:
                   type: string
-
                   example: "7634wtfefywerqtwf"
                 subjectId:
                   type: string
-
+                  example: "kjadhf28yr4834y"
+                sectionId:
+                  type: string
                   example: "kjadhf28yr4834y"
                 startTime:
                   type: string
@@ -1824,11 +1825,16 @@ paths:
                 endTime:
                   type: string
                   example: "11-am"
+                year:
+                  type: string
+                  example: "2023"
               required:
                 - day
                 - teacherId
                 - startTime
                 - endTime
+                - year
+                - sectionId
       responses:
         "200":
           description: "Successfully Updated"
