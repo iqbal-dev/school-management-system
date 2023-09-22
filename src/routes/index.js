@@ -22,7 +22,10 @@ router
   .post(adminController.create)
   .get(adminController.findAllItems);
 router.route("/api/v1/admins/:id").put(adminController.updateItem);
-router.route("/api/v1/subjects").post(subjectController.create);
+router
+  .route("/api/v1/subjects")
+  .post(subjectController.create)
+  .get(subjectController.findAllItems);
 router.route("/api/v1/subjects/:id").put(subjectController.updateItem);
 router
   .route("/api/v1/classes")
