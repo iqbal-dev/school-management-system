@@ -13,6 +13,7 @@ const findAllItems = async ({
   };
 
   const sections = await Section.find(filter)
+    .populate({ path: "teacher", select: "name" })
     .sort(sortStr)
     .skip(page * limit - limit)
     .limit(limit);
@@ -28,7 +29,7 @@ const count = ({ search = "" }) => {
     sectionName: { $regex: search, $options: "i" },
   };
 
-  return Class.count(filter);
+  return Section.count(filter);
 };
 const create = async ({
   sectionName,

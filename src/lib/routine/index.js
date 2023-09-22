@@ -1,4 +1,46 @@
-const { Class, Section, Routine } = require("../../model");
+const { Class, Routine } = require("../../model");
+
+const defaults = require("../../config/defaults");
+const findAllItems = async ({
+  page = defaults.page,
+  limit = defaults.limit,
+  sortType = defaults.sortType,
+  sortBy = defaults.sortBy,
+  classes = defaults.class,
+  section = defaults.section,
+}) => {
+  const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const isClasses = classes ? { class: classes } : {};
+  const isSections = section ? { section } : {};
+  const filter = {
+    ...isClasses,
+    ...isSections,
+  };
+
+  const routines = await Routine.find(filter)
+    .populate({ path: "teacher", select: "name" })
+    .populate({ path: "subject", select: "subjectName" })
+    .populate({ path: "section", select: "sectionName" })
+    .sort(sortStr)
+    .skip(page * limit - limit)
+    .limit(limit);
+
+  return routines.map((routine) => ({
+    ...routine._doc,
+    id: routine.id,
+  }));
+};
+
+const count = ({ classes = defaults.class, section = defaults.section }) => {
+  const isClasses = classes ? { class: classes } : {};
+  const isSections = section ? { section } : {};
+  const filter = {
+    ...isClasses,
+    ...isSections,
+  };
+
+  return Routine.count(filter);
+};
 
 const create = async ({
   day,
@@ -63,4 +105,6 @@ const updateOrCreate = async (
 module.exports = {
   create,
   updateOrCreate,
+  findAllItems,
+  count,
 };
