@@ -316,10 +316,6 @@ paths:
             schema:
               type: object
               properties:
-                id:
-                  type: integer
-                  format: int32
-                  example: 1
                 classId:
                   type: integer
                   format: int32
@@ -350,7 +346,6 @@ paths:
                   example: iqbal@gmail.com
                 contactNo:
                   type: string
-
                   example: 01792119624
                 emergencyContactNo:
                   type: string
@@ -446,7 +441,6 @@ paths:
                   example: iqbal@gmail.com
                 contactNo:
                   type: string
-
                   example: 01792119624
                 emergencyContactNo:
                   type: string
@@ -508,11 +502,9 @@ paths:
                       example: Farmer
                     contactNo:
                       type: string
-
                       example: 01759826983
                     address:
                       type: string
-
                       example: ka-205/2, kuril, dhaka-1229
       responses:
         "200":
@@ -550,9 +542,10 @@ paths:
                   type: string
                   enum: [Student, Teacher, Admin]
                   example: Admin
-                progileImage:
+                profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 password:
                   type: string
                   format: password
@@ -592,11 +585,9 @@ paths:
                   example: A+
                 presentAddress:
                   type: string
-                  format: address
                   example: moheshpur, bitghar, brahmanbaria
                 permanentAddress:
                   type: string
-                  format: address
                   example: moheshpur, bitghar, brahmanbaria
                 designation:
                   type: string
@@ -745,13 +736,13 @@ paths:
                 profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
                 contactNo:
                   type: string
-
                   example: 01287783648
                 gender:
                   type: string
@@ -820,13 +811,13 @@ paths:
                 profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
                 contactNo:
                   type: string
-
                   example: 01287783648
                 gender:
                   type: string
@@ -880,9 +871,10 @@ paths:
                   type: string
                   enum: [Student, Teacher, Admin]
                   example: Admin
-                progileImage:
+                profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 password:
                   type: string
                   format: password
@@ -922,11 +914,9 @@ paths:
                   example: A+
                 presentAddress:
                   type: string
-                  format: address
                   example: moheshpur, bitghar, brahmanbaria
                 permanentAddress:
                   type: string
-                  format: address
                   example: moheshpur, bitghar, brahmanbaria
                 designation:
                   type: string
@@ -1070,13 +1060,13 @@ paths:
                 profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
                 contactNo:
                   type: string
-
                   example: 01287783648
                 gender:
                   type: string
@@ -1145,13 +1135,13 @@ paths:
                 profileImage:
                   type: string
                   format: url
+                  example: https://s3.aws.example.com/23nds
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
                 contactNo:
                   type: string
-
                   example: 01287783648
                 gender:
                   type: string
@@ -1939,7 +1929,6 @@ components:
               example: iqbal@gmail.com
             contactNo:
               type: string
-
               example: 01792119624
             emergencyContactNo:
               type: string
@@ -2021,11 +2010,9 @@ components:
           example: Farmer
         contactNo:
           type: string
-
           example: 01759826983
         address:
           type: string
-
           example: ka-205/2, kuril, dhaka-1229
       required: [name, occupation, contactNo, address]
     Section:
@@ -2053,18 +2040,17 @@ components:
           example: 1
         name:
           type: string
-
           example: Fazlul karim
         profileImage:
           type: string
           format: url
+          example: https://s3.aws.example.com/23nds
         email:
           type: string
           format: email
           example: fazlul@gmail.com
-        contactNo:
+        phone:
           type: string
-
           example: 01287783648
         gender:
           type: string
@@ -2072,7 +2058,6 @@ components:
           example: Male
         presentAddress:
           type: string
-
           example: Bitghar, Brahmanbaria
         permanentAddress:
           type: string
@@ -2109,13 +2094,13 @@ components:
         profileImage:
           type: string
           format: url
+          example: https://s3.aws.example.com/23nds
         email:
           type: string
           format: email
           example: fazlul@gmail.com
         contactNo:
           type: string
-
           example: 01287783648
         gender:
           type: string

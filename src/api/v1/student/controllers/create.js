@@ -1,6 +1,6 @@
 const { generateStudentId } = require("../../user/util");
-const { createUser, updateUserById } = require("../../../../lib/user");
-const { createStudent } = require("../../../../lib/student");
+const { createUser } = require("../../../../lib/user");
+const studentService = require("../../../../lib/student");
 const create = async (req, res, next) => {
   const {
     name,
@@ -34,7 +34,7 @@ const create = async (req, res, next) => {
 
   try {
     const studentId = await generateStudentId();
-    const student = await createStudent({
+    const student = await studentService.create({
       id: studentId,
       name,
       gender,
@@ -61,14 +61,16 @@ const create = async (req, res, next) => {
         address: localGuardianAddress,
       },
     });
-    const user = await createUser({
+    await createUser({
       id: studentId,
       role: "student",
       password: "12345678",
       student: student.id,
     });
     res.status(200).json({
-      ...req.body,
+      data: student,
+      code: 201,
+      message: "Student created successfully",
     });
   } catch (e) {
     next(e);

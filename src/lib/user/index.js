@@ -1,6 +1,7 @@
 const User = require("../../model/User");
 const defaults = require("../../config/defaults");
 const { badRequest } = require("../../utils/error");
+const { generateHash } = require("../../utils/hashing");
 
 const findUserById = async (id) => {
   const user = await User.findOne({ id });
@@ -9,6 +10,7 @@ const findUserById = async (id) => {
 
 const updateUserById = async (id, updateData) => {
   const user = await User.findOneAndUpdate({ id }, { ...updateData });
+  return user;
 };
 
 const userExist = async (email) => {
@@ -26,7 +28,7 @@ const userExist = async (email) => {
  */
 const createUser = async ({ id, role, password, student }) => {
   if (!id || !password || !role) throw badRequest("Invalid parameters");
-
+  password = await generateHash(password);
   const user = await User.create({ id, password, role, student });
 
   return { ...user._doc, id: user.id };

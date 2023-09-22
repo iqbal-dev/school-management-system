@@ -14,6 +14,10 @@ const adminSchema = new Schema(
       minLength: 5,
       required: true,
     },
+    email: {
+      type: String,
+      unique: true,
+    },
     gender: {
       type: String,
       enum: gender,
@@ -26,12 +30,11 @@ const adminSchema = new Schema(
     },
     profileImage: {
       type: String,
-      required: true,
     },
     dob: {
       type: Date,
     },
-    contactNo: {
+    phone: {
       type: String,
       required: true,
     },
