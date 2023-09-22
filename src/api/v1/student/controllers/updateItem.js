@@ -1,10 +1,8 @@
-const { generateStudentId } = require("../../user/util");
-const { createUser } = require("../../../../lib/user");
 const studentService = require("../../../../lib/student");
 const sectionService = require("../../../../lib/section");
 const classService = require("../../../../lib/class");
-const { badRequest } = require("../../../../utils/error");
-const create = async (req, res, next) => {
+const updateItem = async (req, res, next) => {
+  const { id } = req.params;
   const {
     name,
     gender,
@@ -19,7 +17,6 @@ const create = async (req, res, next) => {
     localGuardian,
     classId,
     sectionId,
-    password,
   } = req.body;
   const {
     fatherName,
@@ -38,16 +35,9 @@ const create = async (req, res, next) => {
   } = localGuardian;
 
   try {
-    const [classes, section] = await Promise.all([
-      sectionService.findOneById(sectionId),
-      classService.findOneById(classId),
-    ]);
-    if (!classes || !section) {
-      throw badRequest("Invalid parameters");
-    }
-    const studentId = await generateStudentId();
-    const student = await studentService.create({
-      id: studentId,
+    console.log("====================================");
+    console.log({
+      id,
       name,
       gender,
       dob,
@@ -75,20 +65,59 @@ const create = async (req, res, next) => {
         address: localGuardianAddress,
       },
     });
-    await createUser({
-      id: studentId,
-      role: "student",
-      password: "12345678",
-      userId: student.id,
+    console.log("====================================");
+    const [classes, section] = await Promise.all([
+      sectionService.findOneById(sectionId),
+      classService.findOneById(classId),
+    ]);
+    if (!classes || !section) {
+      throw badRequest("Invalid parameters");
+    }
+    const { data, code } = await studentService.updateOrCreate(id, {
+      id,
+      name,
+      gender,
+      dob,
+      email,
+      contactNo,
+      emergencyContactNo,
+      bloodGroup,
+      presentAddress,
+      permanentAddress,
+      classId,
+      sectionId,
+      guardian: {
+        fatherName,
+        fatherOccupation,
+        fatherContactNo,
+        motherName,
+        motherOccupation,
+        motherContactNo,
+        address,
+      },
+      localGuardian: {
+        name: localGuardianName,
+        occupation,
+        contactNo: localGuardianContact,
+        address: localGuardianAddress,
+      },
     });
-    res.status(201).json({
-      data: student,
-      code: 201,
-      message: "Student created successfully",
-    });
-  } catch (e) {
-    next(e);
+
+    const response = {
+      code,
+      message:
+        code === 200
+          ? "Student updated successfully"
+          : "Student created successfully",
+      data,
+      links: {
+        self: `/students/${data.id}`,
+      },
+    };
+    res.status(code).json(response);
+  } catch (error) {
+    next(error);
   }
 };
 
-module.exports = create;
+module.exports = updateItem;

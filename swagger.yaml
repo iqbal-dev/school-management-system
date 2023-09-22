@@ -265,7 +265,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-  "/student/{id}":
+  "/students/{id}":
     get:
       security:
         - bearerAuth: []

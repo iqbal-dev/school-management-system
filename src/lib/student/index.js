@@ -1,4 +1,6 @@
+const { generateStudentId } = require("../../api/v1/user/util");
 const Student = require("../../model/Student");
+const { createUser } = require("../user");
 
 const create = async ({
   id,
@@ -51,12 +53,18 @@ const updateOrCreate = async (
     permanentAddress,
     guardian,
     localGuardian,
+    classId,
+    sectionId,
   }
 ) => {
-  const student = await Student.findById(id);
-
+  const student = await Student.findOne({ id }).exec();
+  console.log("====================================");
+  console.log(student);
+  console.log("====================================");
   if (!student) {
+    const studentId = await generateStudentId();
     const student = await create({
+      id: studentId,
       name,
       gender,
       dob,
@@ -68,6 +76,14 @@ const updateOrCreate = async (
       permanentAddress,
       guardian,
       localGuardian,
+      classId,
+      sectionId,
+    });
+    await createUser({
+      id: studentId,
+      role: "student",
+      userId: student.id,
+      password: "12345",
     });
     return {
       data: student,
@@ -76,6 +92,7 @@ const updateOrCreate = async (
   }
 
   const payload = {
+    id: student.id,
     name,
     gender,
     dob,
@@ -87,13 +104,14 @@ const updateOrCreate = async (
     permanentAddress,
     guardian,
     localGuardian,
-    author: author.id,
+    class: classId,
+    section: sectionId,
   };
 
-  article.overwrite(payload);
-  await article.save();
+  student.overwrite(payload);
+  await student.save();
 
-  return { article: { ...article._doc, id: article.id }, code: 200 };
+  return { data: { ...student._doc, id: student.id }, code: 200 };
 };
 module.exports = {
   create,
