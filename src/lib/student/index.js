@@ -1,5 +1,7 @@
 const { generateStudentId } = require("../../api/v1/user/util");
+const { User } = require("../../model");
 const Student = require("../../model/Student");
+const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 
 const create = async ({
@@ -58,9 +60,6 @@ const updateOrCreate = async (
   }
 ) => {
   const student = await Student.findOne({ id }).exec();
-  console.log("====================================");
-  console.log(student);
-  console.log("====================================");
   if (!student) {
     const studentId = await generateStudentId();
     const student = await create({
@@ -110,7 +109,13 @@ const updateOrCreate = async (
 
   student.overwrite(payload);
   await student.save();
-
+  if (password) {
+    const password = await generateHash(password);
+    await User.findOneAndUpdate(
+      { id: student.id },
+      { password, needsPasswordChange: false }
+    );
+  }
   return { data: { ...student._doc, id: student.id }, code: 200 };
 };
 module.exports = {

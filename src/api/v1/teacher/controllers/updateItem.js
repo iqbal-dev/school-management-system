@@ -1,4 +1,4 @@
-const adminService = require("../../../../lib/admin");
+const teacherService = require("../../../../lib/teacher");
 const updateItem = async (req, res, next) => {
   const { id } = req.params;
   const {
@@ -14,7 +14,7 @@ const updateItem = async (req, res, next) => {
     designation,
   } = req.body;
   try {
-    const { data, code } = await adminService.updateOrCreate(id, {
+    const { data, code } = await teacherService.updateOrCreate(id, {
       name,
       gender,
       dob,
@@ -30,11 +30,11 @@ const updateItem = async (req, res, next) => {
       code,
       message:
         code === 200
-          ? "Admin updated successfully"
-          : "Admin created successfully",
+          ? "Teacher updated successfully"
+          : "Teacher created successfully",
       data,
       links: {
-        self: `/admins/${data.id}`,
+        self: `/teachers/${data.id}`,
       },
     };
     res.status(code).json(response);

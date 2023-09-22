@@ -671,7 +671,7 @@ paths:
                         type: string
                         format: url
                         example: "/students?page=1&limit=10"
-  "/teacher/{id}":
+  "/teachers/{id}":
     get:
       security:
         - bearerAuth: []
@@ -728,30 +728,58 @@ paths:
                 name:
                   type: string
 
-                  example: Fazlul karim
+                  example: fazlul haque
+                role:
+                  type: string
+                  enum: [Student, Teacher, Admin]
+                  example: Admin
                 profileImage:
                   type: string
                   format: url
                   example: https://s3.aws.example.com/23nds
+                password:
+                  type: string
+                  format: password
+                  example: password123
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
-                contactNo:
+                phone:
                   type: string
-                  example: 01287783648
+
+                  example: 01793229725
+                emergencyContactNo:
+                  type: string
+
+                  example: 01892339726
+                dob:
+                  type: string
+                  format: date-time
                 gender:
                   type: string
-                  enum: [Male, Female]
+                  enum:
+                    - Male
+                    - Female
                   example: Male
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
                 presentAddress:
                   type: string
-
-                  example: Bitghar, Brahmanbaria
+                  example: moheshpur, bitghar, brahmanbaria
                 permanentAddress:
                   type: string
-
-                  example: Bitghar, Brahmanbaria
+                  example: moheshpur, bitghar, brahmanbaria
                 designation:
                   type: string
 
@@ -768,6 +796,7 @@ paths:
                 - presentAddress
                 - permanentAddress
                 - designation
+
       responses:
         "200":
           description: "Successfully Updated"
@@ -1052,30 +1081,58 @@ paths:
                 name:
                   type: string
 
-                  example: Fazlul karim
+                  example: fazlul haque
+                role:
+                  type: string
+                  enum: [Student, Teacher, Admin]
+                  example: Admin
                 profileImage:
                   type: string
                   format: url
                   example: https://s3.aws.example.com/23nds
+                password:
+                  type: string
+                  format: password
+                  example: password123
                 email:
                   type: string
                   format: email
                   example: fazlul@gmail.com
-                contactNo:
+                phone:
                   type: string
-                  example: 01287783648
+
+                  example: 01793229725
+                emergencyContactNo:
+                  type: string
+
+                  example: 01892339726
+                dob:
+                  type: string
+                  format: date-time
                 gender:
                   type: string
-                  enum: [Male, Female]
+                  enum:
+                    - Male
+                    - Female
                   example: Male
+                bloodGroup:
+                  type: string
+                  enum:
+                    - A+
+                    - A-
+                    - B+
+                    - B-
+                    - AB+
+                    - AB-
+                    - O+
+                    - O-
+                  example: A+
                 presentAddress:
                   type: string
-
-                  example: Bitghar, Brahmanbaria
+                  example: moheshpur, bitghar, brahmanbaria
                 permanentAddress:
                   type: string
-
-                  example: Bitghar, Brahmanbaria
+                  example: moheshpur, bitghar, brahmanbaria
                 designation:
                   type: string
 
@@ -1092,6 +1149,7 @@ paths:
                 - presentAddress
                 - permanentAddress
                 - designation
+
       responses:
         "200":
           description: "Successfully Updated"
