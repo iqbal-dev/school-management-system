@@ -138,7 +138,6 @@ paths:
         - $ref: "#/components/parameters/sortTypeParam"
         - $ref: "#/components/parameters/sortByParam"
         - $ref: "#/components/parameters/searchParam"
-        - $ref: "#/components/parameters/class"
       responses:
         "200":
           description: Return a list of Students
@@ -626,7 +625,6 @@ paths:
         - $ref: "#/components/parameters/sortTypeParam"
         - $ref: "#/components/parameters/sortByParam"
         - $ref: "#/components/parameters/searchParam"
-        - $ref: "#/components/parameters/class"
       responses:
         "200":
           description: "Return all teachers"

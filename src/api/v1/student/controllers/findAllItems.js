@@ -19,14 +19,11 @@ const findAllItems = async (req, res, next) => {
     });
     const data = query.getTransformedItems({
       items: articles,
-      selection: ["id", "title", "cover", "author", "updatedAt", "createdAt"],
+      selection: [],
       path: "/articles",
     });
     // pagination
     const totalItems = await studentService.count({ search });
-    console.log("====================================");
-    console.log(totalItems);
-    console.log("====================================");
     const pagination = query.getPagination({ totalItems, limit, page });
     // HATEOAS Links
     const links = query.getHATEOASForAllItems({
