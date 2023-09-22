@@ -2,7 +2,7 @@ const { generateAdminId } = require("../../api/v1/user/util");
 const { Student, Admin, User } = require("../../model");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
-
+const defaults = require("../../config/defaults");
 const findAllItems = async ({
   page = defaults.page,
   limit = defaults.limit,
