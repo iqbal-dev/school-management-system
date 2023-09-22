@@ -26,10 +26,10 @@ const userExist = async (email) => {
  * @param {string} [user.password] - user password
  * @returns
  */
-const createUser = async ({ id, role, password, student }) => {
+const createUser = async ({ id, role, password, userId }) => {
   if (!id || !password || !role) throw badRequest("Invalid parameters");
   password = await generateHash(password);
-  const user = await User.create({ id, password, role, student });
+  const user = await User.create({ id, password, role, [role]: userId });
 
   return { ...user._doc, id: user.id };
 };

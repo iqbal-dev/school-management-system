@@ -35,7 +35,7 @@ const create = async (req, res, next) => {
       id: teacherId,
       role: "teacher",
       password,
-      teacher: teacher.id,
+      userId: teacher.id,
     });
     res.status(200).json({
       code: 200,

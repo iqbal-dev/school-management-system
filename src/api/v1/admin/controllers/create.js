@@ -39,7 +39,7 @@ const create = async (req, res, next) => {
       id: adminId,
       role: "admin",
       password,
-      admin: admin.id,
+      userId: admin.id,
     });
     res.status(200).json({
       data: admin,
