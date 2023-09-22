@@ -1516,6 +1516,13 @@ paths:
                     - active
                     - block
                   example: active
+              required:
+                - sectionName
+                - teacherId
+                - classId
+                - year
+                - status
+
       responses:
         "201":
           description: Successfully created a new section
@@ -1590,20 +1597,28 @@ paths:
               properties:
                 sectionName:
                   type: string
-
-                  example: B
-                year:
-                  type: string
-
-                  example: 2023
+                  example: A
                 teacherId:
                   type: string
-
-                  example: askdjfh4yo34
+                  example: "7634wtfefywerqtwf"
+                classId:
+                  type: string
+                  example: "7634wtfefywerqtwf"
+                year:
+                  type: string
+                  example: 2013
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - block
+                  example: active
               required:
                 - sectionName
-                - year
                 - teacherId
+                - classId
+                - year
+                - status
       responses:
         "200":
           description: "Successfully Updated"
