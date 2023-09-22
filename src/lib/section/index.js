@@ -1,5 +1,35 @@
 const { Class, Section } = require("../../model");
+const defaults = require("../../config/defaults");
+const findAllItems = async ({
+  page = defaults.page,
+  limit = defaults.limit,
+  sortType = defaults.sortType,
+  sortBy = defaults.sortBy,
+  search = defaults.search,
+}) => {
+  const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const filter = {
+    sectionName: { $regex: search, $options: "i" },
+  };
 
+  const sections = await Section.find(filter)
+    .sort(sortStr)
+    .skip(page * limit - limit)
+    .limit(limit);
+
+  return sections.map((section) => ({
+    ...section._doc,
+    id: section.id,
+  }));
+};
+
+const count = ({ search = "" }) => {
+  const filter = {
+    sectionName: { $regex: search, $options: "i" },
+  };
+
+  return Class.count(filter);
+};
 const create = async ({
   sectionName,
   year,
@@ -58,4 +88,6 @@ module.exports = {
   create,
   findOneById,
   updateOrCreate,
+  findAllItems,
+  count,
 };

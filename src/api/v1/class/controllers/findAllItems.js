@@ -24,6 +24,7 @@ const findAllItems = async (req, res, next) => {
     });
     // pagination
     const totalItems = await classService.count({ search });
+
     const pagination = query.getPagination({ totalItems, limit, page });
     // HATEOAS Links
     const links = query.getHATEOASForAllItems({
