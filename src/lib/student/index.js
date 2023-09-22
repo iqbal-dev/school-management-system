@@ -258,6 +258,7 @@ const findSingleItem = async (id) => {
     },
   };
 };
+
 module.exports = {
   create,
   updateOrCreate,
