@@ -3,6 +3,40 @@ const { User } = require("../../model");
 const Student = require("../../model/Student");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
+const defaults = require("../../config/defaults");
+
+const findAllItems = async ({
+  page = defaults.page,
+  limit = defaults.limit,
+  sortType = defaults.sortType,
+  sortBy = defaults.sortBy,
+  search = defaults.search,
+}) => {
+  const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  const students = await Student.find(filter)
+    .populate({ path: "class", select: "className" })
+    .populate({ path: "section", select: "sectionName" })
+    .sort(sortStr)
+    .skip(page * limit - limit)
+    .limit(limit);
+
+  return students.map((student) => ({
+    ...student._doc,
+    id: student.id,
+  }));
+};
+
+const count = ({ search = "" }) => {
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  return Student.count(filter);
+};
 
 const create = async ({
   id,
@@ -121,4 +155,6 @@ const updateOrCreate = async (
 module.exports = {
   create,
   updateOrCreate,
+  findAllItems,
+  count,
 };

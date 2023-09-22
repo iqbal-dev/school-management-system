@@ -7,7 +7,10 @@ const { controllers: subjectController } = require("../api/v1/subject");
 const { controllers: classController } = require("../api/v1/class");
 const { controllers: sectionController } = require("../api/v1/section");
 const { controllers: routineController } = require("../api/v1/routine");
-router.route("/api/v1/students").post(studentController.create);
+router
+  .route("/api/v1/students")
+  .post(studentController.create)
+  .get(studentController.findAllItems);
 router.route("/api/v1/students/:id").put(studentController.updateItem);
 router.route("/api/v1/teachers").post(teacherController.create);
 router.route("/api/v1/teachers/:id").put(teacherController.updateItem);
