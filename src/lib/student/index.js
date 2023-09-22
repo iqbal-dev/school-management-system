@@ -13,6 +13,8 @@ const create = async ({
   permanentAddress,
   guardian,
   localGuardian,
+  classId,
+  sectionId,
 }) => {
   const student = await Student.create({
     id,
@@ -27,6 +29,9 @@ const create = async ({
     permanentAddress,
     guardian,
     localGuardian,
+
+    class: classId,
+    section: sectionId,
   });
 
   return { ...student._doc, id: student._id };

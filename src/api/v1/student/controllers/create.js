@@ -1,6 +1,9 @@
 const { generateStudentId } = require("../../user/util");
 const { createUser } = require("../../../../lib/user");
 const studentService = require("../../../../lib/student");
+const sectionService = require("../../../../lib/section");
+const classService = require("../../../../lib/class");
+const { badRequest } = require("../../../../utils/error");
 const create = async (req, res, next) => {
   const {
     name,
@@ -14,6 +17,8 @@ const create = async (req, res, next) => {
     permanentAddress,
     guardian,
     localGuardian,
+    classId,
+    sectionId,
     password,
   } = req.body;
   const {
@@ -33,6 +38,16 @@ const create = async (req, res, next) => {
   } = localGuardian;
 
   try {
+    const [classes, section] = await Promise.all([
+      sectionService.findOneById(sectionId),
+      classService.findOneById(classId),
+    ]);
+    console.log("====================================");
+    console.log({ classes, section });
+    console.log("====================================");
+    if (!classes || !section) {
+      throw badRequest("Invalid parameters");
+    }
     const studentId = await generateStudentId();
     const student = await studentService.create({
       id: studentId,
@@ -45,6 +60,8 @@ const create = async (req, res, next) => {
       bloodGroup,
       presentAddress,
       permanentAddress,
+      classId,
+      sectionId,
       guardian: {
         fatherName,
         fatherOccupation,
@@ -67,7 +84,7 @@ const create = async (req, res, next) => {
       password: "12345678",
       userId: student.id,
     });
-    res.status(200).json({
+    res.status(201).json({
       data: student,
       code: 201,
       message: "Student created successfully",

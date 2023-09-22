@@ -10,14 +10,14 @@ const sectionSchema = new Schema(
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["pending", "active", "inactive"],
-      required: true,
-    },
     teacher: {
       type: Schema.Types.ObjectId,
       ref: "Teacher",
+      required: true,
+    },
+    class: {
+      type: Schema.Types.ObjectId,
+      ref: "Class",
       required: true,
     },
   },

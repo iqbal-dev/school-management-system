@@ -18,17 +18,18 @@ const sectionSchema = new Schema(
       type: String,
       required: true,
     },
-    classStart: {
+    startTime: {
       type: String,
       required: true,
     },
-    classEnd: {
+    endTime: {
       type: String,
       required: true,
     },
     status: {
       type: String,
       enum: ["pending", "active", "inactive"],
+      defaultValue: "active",
       required: true,
     },
     teacher: {
@@ -39,6 +40,11 @@ const sectionSchema = new Schema(
     subject: {
       type: Schema.Types.ObjectId,
       ref: "Subject",
+      required: true,
+    },
+    section: {
+      type: Schema.Types.ObjectId,
+      ref: "Section",
       required: true,
     },
   },

@@ -188,13 +188,11 @@ paths:
               type: object
               properties:
                 classId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "kajdsfkasd"
                 sectionId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "skdjfhsd"
                 name:
                   type: string
                   example: Md Iqbal Hossain
@@ -251,6 +249,8 @@ paths:
                   guardian,
                   localGuardian,
                   status,
+                  sectionId,
+                  classId,
                 ]
       responses:
         "201":
@@ -317,13 +317,11 @@ paths:
               type: object
               properties:
                 classId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "kajdsfkasd"
                 sectionId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "skdjfhsd"
                 name:
                   type: string
                   example: Md Iqbal Hossain
@@ -412,13 +410,11 @@ paths:
               type: object
               properties:
                 classId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "kajdsfkasd"
                 sectionId:
-                  type: integer
-                  format: int32
-                  example: 1
+                  type: string
+                  example: "skdjfhsd"
                 name:
                   type: string
                   example: Md Iqbal Hossain
@@ -1447,15 +1443,15 @@ paths:
               properties:
                 sectionName:
                   type: string
-
                   example: A
                 teacherId:
                   type: string
-
+                  example: "7634wtfefywerqtwf"
+                classId:
+                  type: string
                   example: "7634wtfefywerqtwf"
                 year:
                   type: string
-
                   example: 2013
                 status:
                   type: string
@@ -1643,25 +1639,29 @@ paths:
                   example: Saturday
                 teacherId:
                   type: string
-
                   example: "7634wtfefywerqtwf"
                 subjectId:
                   type: string
-
+                  example: "kjadhf28yr4834y"
+                sectionId:
+                  type: string
                   example: "kjadhf28yr4834y"
                 startTime:
                   type: string
-                  format: time
                   example: "10am"
                 endTime:
                   type: string
-                  format: time
                   example: "11-am"
+                year:
+                  type: string
+                  example: "2023"
               required:
                 - day
                 - teacherId
                 - startTime
                 - endTime
+                - year
+                - sectionId
       responses:
         "201":
           description: Successfully created a new section
@@ -1748,11 +1748,9 @@ paths:
                   example: "kjadhf28yr4834y"
                 startTime:
                   type: string
-                  format: time
                   example: "10am"
                 endTime:
                   type: string
-                  format: time
                   example: "11-am"
               required:
                 - day
@@ -1805,11 +1803,9 @@ paths:
                   example: "kjadhf28yr4834y"
                 startTime:
                   type: string
-                  format: time
                   example: "10am"
                 endTime:
                   type: string
-                  format: time
                   example: "11-am"
       responses:
         "200":

@@ -100,10 +100,12 @@ const studentSchema = new Schema(
     class: {
       type: Schema.Types.ObjectId,
       ref: "Class",
+      required: true,
     },
     section: {
       type: Schema.Types.ObjectId,
       ref: "Section",
+      required: true,
     },
     profileImage: {
       type: String,

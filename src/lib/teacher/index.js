@@ -29,7 +29,12 @@ const create = async ({
 
   return { ...teacher._doc, id: teacher._id };
 };
+const findOneById = async (id) => {
+  const teacher = await Teacher.findById(id);
+  return teacher ? { ...teacher._doc, id: teacher._id } : false;
+};
 
 module.exports = {
   create,
+  findOneById,
 };
