@@ -17,7 +17,10 @@ router
   .post(teacherController.create)
   .get(teacherController.findAllItems);
 router.route("/api/v1/teachers/:id").put(teacherController.updateItem);
-router.route("/api/v1/admins").post(adminController.create);
+router
+  .route("/api/v1/admins")
+  .post(adminController.create)
+  .get(adminController.findAllItems);
 router.route("/api/v1/admins/:id").put(adminController.updateItem);
 router.route("/api/v1/subjects").post(subjectController.create);
 router.route("/api/v1/subjects/:id").put(subjectController.updateItem);

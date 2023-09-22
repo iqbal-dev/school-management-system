@@ -12,6 +12,7 @@ const updateItem = async (req, res, next) => {
     presentAddress,
     permanentAddress,
     designation,
+    password,
   } = req.body;
   try {
     const { data, code } = await adminService.updateOrCreate(id, {
@@ -25,6 +26,7 @@ const updateItem = async (req, res, next) => {
       presentAddress,
       permanentAddress,
       designation,
+      password,
     });
     const response = {
       code,

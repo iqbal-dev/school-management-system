@@ -11,10 +11,16 @@ const findAllItems = async ({
   sortType = defaults.sortType,
   sortBy = defaults.sortBy,
   search = defaults.search,
+  classes = defaults.class,
+  section = defaults.section,
 }) => {
   const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const isClasses = classes ? { class: classes } : {};
+  const isSections = section ? { section } : {};
   const filter = {
     name: { $regex: search, $options: "i" },
+    ...isClasses,
+    ...isSections,
   };
 
   const students = await Student.find(filter)
@@ -30,9 +36,17 @@ const findAllItems = async ({
   }));
 };
 
-const count = ({ search = "" }) => {
+const count = ({
+  search = "",
+  classes = defaults.class,
+  section = defaults.section,
+}) => {
+  const isClasses = classes ? { class: classes } : {};
+  const isSections = section ? { section } : {};
   const filter = {
     name: { $regex: search, $options: "i" },
+    ...isClasses,
+    ...isSections,
   };
 
   return Student.count(filter);
@@ -91,6 +105,7 @@ const updateOrCreate = async (
     localGuardian,
     classId,
     sectionId,
+    password,
   }
 ) => {
   const student = await Student.findOne({ id }).exec();
@@ -139,12 +154,13 @@ const updateOrCreate = async (
     localGuardian,
     class: classId,
     section: sectionId,
+    password,
   };
 
   student.overwrite(payload);
   await student.save();
   if (password) {
-    const password = await generateHash(password);
+    password = await generateHash(password);
     await User.findOneAndUpdate(
       { id: student.id },
       { password, needsPasswordChange: false }

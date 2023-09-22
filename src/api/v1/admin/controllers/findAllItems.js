@@ -1,6 +1,6 @@
 const { query } = require("../../../../utils");
 const defaults = require("../../../../config/defaults");
-const teacherService = require("../../../../lib/teacher");
+const adminService = require("../../../../lib/admin");
 const findAllItems = async (req, res, next) => {
   const page = req.query.page || defaults.page;
   const limit = req.query.limit || defaults.limit;
@@ -10,7 +10,7 @@ const findAllItems = async (req, res, next) => {
 
   try {
     // data
-    const admins = await teacherService.findAllItems({
+    const admins = await adminService.findAllItems({
       page,
       limit,
       sortType,
@@ -20,10 +20,10 @@ const findAllItems = async (req, res, next) => {
     const data = query.getTransformedItems({
       items: admins,
       selection: [],
-      path: "/teachers",
+      path: "/admins",
     });
     // pagination
-    const totalItems = await teacherService.count({ search });
+    const totalItems = await adminService.count({ search });
     const pagination = query.getPagination({ totalItems, limit, page });
     // HATEOAS Links
     const links = query.getHATEOASForAllItems({

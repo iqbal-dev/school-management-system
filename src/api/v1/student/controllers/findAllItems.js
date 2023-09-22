@@ -7,23 +7,27 @@ const findAllItems = async (req, res, next) => {
   const sortType = req.query.sort_type || defaults.sortType;
   const sortBy = req.query.sort_by || defaults.sortBy;
   const search = req.query.search || defaults.search;
+  const classes = req.query.class || defaults.class;
+  const section = req.query.section || defaults.section;
 
   try {
     // data
-    const articles = await studentService.findAllItems({
+    const students = await studentService.findAllItems({
       page,
       limit,
       sortType,
       sortBy,
       search,
+      classes,
+      section,
     });
     const data = query.getTransformedItems({
-      items: articles,
+      items: students,
       selection: [],
       path: "/students",
     });
     // pagination
-    const totalItems = await studentService.count({ search });
+    const totalItems = await studentService.count({ search, classes, section });
     const pagination = query.getPagination({ totalItems, limit, page });
     // HATEOAS Links
     const links = query.getHATEOASForAllItems({

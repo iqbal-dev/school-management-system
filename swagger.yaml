@@ -138,6 +138,8 @@ paths:
         - $ref: "#/components/parameters/sortTypeParam"
         - $ref: "#/components/parameters/sortByParam"
         - $ref: "#/components/parameters/searchParam"
+        - $ref: "#/components/parameters/class"
+        - $ref: "#/components/parameters/section"
       responses:
         "200":
           description: Return a list of Students
@@ -638,19 +640,6 @@ paths:
                     items:
                       allOf:
                         - $ref: "#/components/schemas/Teacher"
-                        - type: object
-                          properties:
-                            sections:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  sectionName:
-                                    type: string
-
-                                    example: A
-                                  routines:
-                                    $ref: "#/components/schemas/Routines"
                         - $ref: "#/components/schemas/Timestamp"
                   pagination:
                     $ref: "#/components/schemas/Pagination"
@@ -669,6 +658,10 @@ paths:
                         type: string
                         format: url
                         example: "/students?page=1&limit=10"
+        "400":
+          $ref: "#/components/responses/400"
+        "500":
+          "$ref": "#/components/responses/500"
   "/teachers/{id}":
     get:
       security:
@@ -2809,8 +2802,15 @@ components:
       name: class
       description: Search term
       schema:
-        type: number
-        example: 1
+        type: string
+        example: ""
+    section:
+      in: query
+      name: section
+      description: Search term
+      schema:
+        type: string
+        example: ""
     idPathParam:
       in: path
       name: id

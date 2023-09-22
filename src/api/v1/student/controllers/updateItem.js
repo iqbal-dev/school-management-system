@@ -17,6 +17,7 @@ const updateItem = async (req, res, next) => {
     localGuardian,
     classId,
     sectionId,
+    password,
   } = req.body;
   const {
     fatherName,
@@ -35,37 +36,6 @@ const updateItem = async (req, res, next) => {
   } = localGuardian;
 
   try {
-    console.log("====================================");
-    console.log({
-      id,
-      name,
-      gender,
-      dob,
-      email,
-      contactNo,
-      emergencyContactNo,
-      bloodGroup,
-      presentAddress,
-      permanentAddress,
-      classId,
-      sectionId,
-      guardian: {
-        fatherName,
-        fatherOccupation,
-        fatherContactNo,
-        motherName,
-        motherOccupation,
-        motherContactNo,
-        address,
-      },
-      localGuardian: {
-        name: localGuardianName,
-        occupation,
-        contactNo: localGuardianContact,
-        address: localGuardianAddress,
-      },
-    });
-    console.log("====================================");
     const [classes, section] = await Promise.all([
       sectionService.findOneById(sectionId),
       classService.findOneById(classId),
@@ -86,6 +56,7 @@ const updateItem = async (req, res, next) => {
       permanentAddress,
       classId,
       sectionId,
+      password,
       guardian: {
         fatherName,
         fatherOccupation,

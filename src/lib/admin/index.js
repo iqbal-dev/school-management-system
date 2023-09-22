@@ -3,6 +3,37 @@ const { Student, Admin, User } = require("../../model");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 
+const findAllItems = async ({
+  page = defaults.page,
+  limit = defaults.limit,
+  sortType = defaults.sortType,
+  sortBy = defaults.sortBy,
+  search = defaults.search,
+}) => {
+  const sortStr = `${sortType === "dsc" ? "-" : ""}${sortBy}`;
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  const admins = await Admin.find(filter)
+    .sort(sortStr)
+    .skip(page * limit - limit)
+    .limit(limit);
+
+  return admins.map((admin) => ({
+    ...admin._doc,
+    id: admin.id,
+  }));
+};
+
+const count = ({ search = "" }) => {
+  const filter = {
+    name: { $regex: search, $options: "i" },
+  };
+
+  return Admin.count(filter);
+};
+
 const create = async ({
   id,
   name,
@@ -46,6 +77,7 @@ const updateOrCreate = async (
     presentAddress,
     permanentAddress,
     designation,
+    password,
   }
 ) => {
   const admin = await Admin.findOne({ id }).exec();
@@ -93,7 +125,7 @@ const updateOrCreate = async (
   admin.overwrite(payload);
   await admin.save();
   if (password) {
-    const password = await generateHash(password);
+    password = await generateHash(password);
     await User.findOneAndUpdate(
       { id: admin.id },
       { password, needsPasswordChange: false }
@@ -105,4 +137,6 @@ const updateOrCreate = async (
 module.exports = {
   create,
   updateOrCreate,
+  findAllItems,
+  count,
 };

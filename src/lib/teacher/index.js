@@ -20,9 +20,9 @@ const findAllItems = async ({
     .skip(page * limit - limit)
     .limit(limit);
 
-  return teachers.map((student) => ({
-    ...student._doc,
-    id: student.id,
+  return teachers.map((teacher) => ({
+    ...teacher._doc,
+    id: teacher.id,
   }));
 };
 
@@ -128,7 +128,7 @@ const updateOrCreate = async (
   teacher.overwrite(payload);
   await teacher.save();
   if (password) {
-    const password = await generateHash(password);
+    password = await generateHash(password);
     await User.findOneAndUpdate(
       { id: teacher.id },
       { password, needsPasswordChange: false }
