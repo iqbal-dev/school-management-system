@@ -14,6 +14,7 @@ router
 router
   .route("/api/v1/students/:id")
   .put(studentController.updateItem)
+  .patch(studentController.updateItemPatch)
   .get(studentController.findSingleItem);
 router
   .route("/api/v1/teachers")
@@ -22,6 +23,7 @@ router
 router
   .route("/api/v1/teachers/:id")
   .put(teacherController.updateItem)
+  .patch(teacherController.updateItemPatch)
   .get(teacherController.findSingleItem);
 router
   .route("/api/v1/admins")

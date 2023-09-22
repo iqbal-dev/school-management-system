@@ -402,127 +402,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-    patch:
-      security:
-        - bearerAuth: []
-      tags: [Student]
-      description: Partially update an Student
-      parameters:
-        - $ref: "#/components/parameters/idPathParam"
-      requestBody:
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                classId:
-                  type: string
-                  example: "kajdsfkasd"
-                sectionId:
-                  type: string
-                  example: "skdjfhsd"
-                name:
-                  type: string
-                  example: Md Iqbal Hossain
-                gender:
-                  type: string
-                  enum:
-                    - Male
-                    - Female
-                  example: Male
-                profileImage:
-                  type: string
-                  format: url
-                  example: https://s3.aws.example.com/23nds
-                dob:
-                  type: string
-                  format: date-time
-                email:
-                  type: string
-                  format: email
-                  example: iqbal@gmail.com
-                contactNo:
-                  type: string
-                  example: 01792119624
-                emergencyContactNo:
-                  type: string
 
-                  example: 01792119624
-                bloodGroup:
-                  type: string
-                  enum:
-                    - A+
-                    - A-
-                    - B+
-                    - B-
-                    - AB+
-                    - AB-
-                    - O+
-                    - O-
-                  example: A+
-                guardian:
-                  type: object
-                  properties:
-                    fatherName:
-                      type: string
-
-                      example: Mubarak Hossain
-                    fatherOccupation:
-                      type: string
-
-                      example: Farmer
-                    fatherContactNo:
-                      type: string
-
-                      example: 01759826983
-                    motherName:
-                      type: string
-
-                      example: Mubarak Hossain
-                    motherOccupation:
-                      type: string
-
-                      example: Farmer
-                    motherContactNo:
-                      type: string
-
-                      example: 0179276453478
-                    address:
-                      type: string
-
-                      example: moheshpur, bitghar, nobinagar, brahmanbaria
-                localGuardian:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-
-                      example: Mubarak Hossain
-                    occupation:
-                      type: string
-
-                      example: Farmer
-                    contactNo:
-                      type: string
-                      example: 01759826983
-                    address:
-                      type: string
-                      example: ka-205/2, kuril, dhaka-1229
-      responses:
-        "200":
-          description: "Successfully Updated"
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/StudentUpdateDTO"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "404":
-          $ref: "#/components/responses/404"
-        "500":
-          $ref: "#/components/responses/500"
   "/teachers":
     post:
       security:
@@ -1129,65 +1009,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-    patch:
-      security:
-        - bearerAuth: []
-      tags: [Admin]
-      description: Partially update an Admin
-      parameters:
-        - $ref: "#/components/parameters/idPathParam"
-      requestBody:
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
 
-                  example: Fazlul karim
-                profileImage:
-                  type: string
-                  format: url
-                  example: https://s3.aws.example.com/23nds
-                email:
-                  type: string
-                  format: email
-                  example: fazlul@gmail.com
-                contactNo:
-                  type: string
-                  example: 01287783648
-                gender:
-                  type: string
-                  enum: [Male, Female]
-                  example: Male
-                presentAddress:
-                  type: string
-
-                  example: Bitghar, Brahmanbaria
-                permanentAddress:
-                  type: string
-
-                  example: Bitghar, Brahmanbaria
-                designation:
-                  type: string
-
-                  example: Head Teacher
-      responses:
-        "200":
-          description: "Successfully Updated"
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/AdminUpdateDTO"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "404":
-          $ref: "#/components/responses/404"
-        "500":
-          $ref: "#/components/responses/500"
   "/subjects":
     post:
       security:
@@ -1598,44 +1420,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-    patch:
-      security:
-        - bearerAuth: []
-      tags: [Admin]
-      description: Create or update entire Class
-      parameters:
-        - $ref: "#/components/parameters/idPathParam"
-      requestBody:
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                sectionName:
-                  type: string
 
-                  example: B
-                year:
-                  type: string
-
-                  example: 2023
-                teacherId:
-                  type: string
-
-                  example: askdjfh4yo34
-      responses:
-        "200":
-          description: "Successfully Updated"
-          content: &Student_update_content
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/SectionUpdateDTO"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "500":
-          $ref: "#/components/responses/500"
     delete:
       security:
         - bearerAuth: []
@@ -1814,50 +1599,7 @@ paths:
           $ref: "#/components/responses/401"
         "500":
           $ref: "#/components/responses/500"
-    patch:
-      security:
-        - bearerAuth: []
-      tags: [Admin]
-      description: Create or update entire Routine
-      parameters:
-        - $ref: "#/components/parameters/idPathParam"
-      requestBody:
-        content:
-          "application/json":
-            schema:
-              type: object
-              properties:
-                day:
-                  type: string
 
-                  example: Saturday
-                teacherId:
-                  type: string
-
-                  example: "7634wtfefywerqtwf"
-                subjectId:
-                  type: string
-
-                  example: "kjadhf28yr4834y"
-                startTime:
-                  type: string
-                  example: "10am"
-                endTime:
-                  type: string
-                  example: "11-am"
-      responses:
-        "200":
-          description: "Successfully Updated"
-          content: &Student_update_content
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/RoutineUpdateDTO"
-        "400":
-          $ref: "#/components/responses/400"
-        "401":
-          $ref: "#/components/responses/401"
-        "500":
-          $ref: "#/components/responses/500"
     delete:
       security:
         - bearerAuth: []

@@ -134,9 +134,51 @@ const updateOrCreate = async (
   return { data: { ...admin._doc, id: admin.id }, code: 200 };
 };
 
+const updateProperties = async (
+  id,
+  {
+    name,
+    gender,
+    dob,
+    email,
+    phone,
+    emergencyContactNo,
+    bloodGroup,
+    presentAddress,
+    permanentAddress,
+    designation,
+  }
+) => {
+  const teacher = await Admin.findById(id);
+  if (!teacher) {
+    throw notFound();
+  }
+
+  const payload = {
+    name,
+    gender,
+    dob,
+    email,
+    phone,
+    emergencyContactNo,
+    bloodGroup,
+    presentAddress,
+    permanentAddress,
+    designation,
+  };
+
+  Object.keys(payload).forEach((key) => {
+    teacher[key] = payload[key] ?? teacher[key];
+  });
+
+  await teacher.save();
+  return { ...teacher._doc, id: teacher.id };
+};
+
 module.exports = {
   create,
   updateOrCreate,
   findAllItems,
   count,
+  updateProperties,
 };

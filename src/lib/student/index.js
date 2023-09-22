@@ -4,7 +4,7 @@ const Student = require("../../model/Student");
 const { generateHash } = require("../../utils/hashing");
 const { createUser } = require("../user");
 const defaults = require("../../config/defaults");
-const { badRequest } = require("../../utils/error");
+const { badRequest, notFound } = require("../../utils/error");
 const routineService = require("../routine");
 const { convertRoutine } = require("../../api/v1/routine/util");
 
@@ -84,7 +84,6 @@ const create = async ({
     permanentAddress,
     guardian,
     localGuardian,
-
     class: classId,
     section: sectionId,
   });
@@ -172,6 +171,71 @@ const updateOrCreate = async (
   return { data: { ...student._doc, id: student.id }, code: 200 };
 };
 
+const updateProperties = async (
+  id,
+  {
+    name,
+    gender,
+    dob,
+    email,
+    contactNo,
+    emergencyContactNo,
+    bloodGroup,
+    presentAddress,
+    permanentAddress,
+    guardian,
+    localGuardian,
+    classId,
+    sectionId,
+  }
+) => {
+  const student = await Student.findOne({ id });
+  if (!student) {
+    throw notFound();
+  }
+
+  const payload = {
+    name,
+    gender,
+    dob,
+    email,
+    contactNo,
+    emergencyContactNo,
+    bloodGroup,
+    presentAddress,
+    permanentAddress,
+    guardian,
+    localGuardian,
+    class: classId,
+    section: sectionId,
+  };
+
+  Object.keys(payload).forEach((key) => {
+    if (key === "guardian") {
+      // Handle the 'guardian' object
+      student.guardian = student.guardian || {};
+      Object.keys(payload.guardian).forEach((guardianKey) => {
+        student.guardian[guardianKey] =
+          payload.guardian[guardianKey] ?? student.guardian[guardianKey];
+      });
+    } else if (key === "localGuardian") {
+      // Handle the 'localGuardian' object
+      student.localGuardian = student.localGuardian || {};
+      Object.keys(payload.localGuardian).forEach((localGuardianKey) => {
+        student.localGuardian[localGuardianKey] =
+          payload.localGuardian[localGuardianKey] ??
+          student.localGuardian[localGuardianKey];
+      });
+    } else {
+      // Handle other top-level properties
+      student[key] = payload[key] ?? student[key];
+    }
+  });
+
+  await student.save();
+  return { ...student._doc, id: student.id };
+};
+
 const findSingleItem = async (id) => {
   if (!id) throw badRequest("Id is required");
   const student = await Student.findOne({ _id: id })
@@ -200,4 +264,5 @@ module.exports = {
   findAllItems,
   count,
   findSingleItem,
+  updateProperties,
 };
