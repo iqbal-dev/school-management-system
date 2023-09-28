@@ -1,3 +1,9 @@
+/**
+ * Convert input data representing routines into a structured format grouped by days.
+ *
+ * @param {Array} input - The input data containing routines.
+ * @returns {object} An object where routines are grouped by days.
+ */
 const convertRoutine = (input) => {
   const convertedData = {};
 
