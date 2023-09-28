@@ -1,28 +1,19 @@
-// todo: mock DB
+// mongoose.js
 const mongoose = require("mongoose");
-const { MongoMemoryServer } = require("mongodb-memory-server");
 
-let mongod;
-
+const connectToDatabase = async () => {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect("mongodb://127.0.0.1:27017/schoolManagementSystem", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  }
+};
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create();
-  const uri = mongod.getUri();
-
-  await mongoose.connect(uri);
-});
+  await connectToDatabase();
+}, 50000);
 
 afterAll(async () => {
-  await mongoose.connection.dropDatabase();
+  // Close the Mongoose connection after all tests
   await mongoose.connection.close();
-  await mongod.stop();
-});
-
-afterEach(async () => {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    const collection = collections[key];
-
-    await collection.deleteMany();
-  }
 });
