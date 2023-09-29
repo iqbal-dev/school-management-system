@@ -2,6 +2,7 @@ const { generateQueryString } = require("../../src/utils/qs");
 const {
   getPagination,
   getHATEOASForAllItems,
+  getTransformedItems,
 } = require("../../src/utils/query");
 
 describe("get Pagination", () => {
@@ -99,5 +100,67 @@ describe("getHATEOASForAllItems", () => {
     expect(hateoas.self).toBe(url);
     expect(hateoas.next).toBeUndefined();
     expect(hateoas.prev).toBeUndefined();
+  });
+});
+
+describe("getTransformedItems Function", () => {
+  it("should transform items with default selection and path", () => {
+    const items = [
+      { id: 1, name: "Admin 1", email: "admin1@gmail.com" },
+      { id: 2, name: "Admin 2", email: "admin2@gmail.com" },
+    ];
+
+    const transformedItems = getTransformedItems({ items, path: "/admins" });
+
+    const expectedTransformedItems = [
+      { id: 1, name: "Admin 1", email: "admin1@gmail.com", link: "/admins/1" },
+      { id: 2, name: "Admin 2", email: "admin2@gmail.com", link: "/admins/2" },
+    ];
+
+    expect(transformedItems).toEqual(expectedTransformedItems);
+  });
+
+  it("should transform items with custom selection and path", () => {
+    const items = [
+      {
+        id: 1,
+        name: "Admin 1",
+        email: "admin1@gmail.com",
+        phone: "01792346788",
+      },
+      {
+        id: 2,
+        name: "Admin 2",
+        email: "admin2@gmail.com",
+        phone: "01893746845",
+      },
+    ];
+    const selection = ["name", "phone"];
+    const path = "/admins";
+
+    const transformedItems = getTransformedItems({ items, selection, path });
+
+    const expectedTransformedItems = [
+      { name: "Admin 1", phone: "01792346788", link: `${path}/1` },
+      { name: "Admin 2", phone: "01893746845", link: `${path}/2` },
+    ];
+
+    expect(transformedItems).toEqual(expectedTransformedItems);
+  });
+
+  it("should throw an error for invalid selection", () => {
+    const items = [{ id: 1, name: "Admin 1", email: "admin1@gmail.com" }];
+    const selection = "invalid"; // Invalid selection, should throw an error
+
+    expect(() => getTransformedItems({ items, selection })).toThrowError(
+      "Invalid selection"
+    );
+  });
+
+  it("should return an empty array for empty items array", () => {
+    const items = [];
+    const transformedItems = getTransformedItems({ items });
+
+    expect(transformedItems).toEqual([]);
   });
 });
