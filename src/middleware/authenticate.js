@@ -11,7 +11,6 @@ const authenticate = async (req, _res, next) => {
     if (!user) {
       next(authenticationError());
     }
-
     req.user = { ...user._doc, id: user.id };
     next();
   } catch (e) {

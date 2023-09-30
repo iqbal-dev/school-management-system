@@ -48,7 +48,7 @@ router
   );
 router
   .route("/api/v1/admins")
-  .post(authenticate, authorize(["admin"]), adminController.create)
+  .post(adminController.create)
   .get(authenticate, authorize(["admin"]), adminController.findAllItems);
 router
   .route("/api/v1/admins/:id")

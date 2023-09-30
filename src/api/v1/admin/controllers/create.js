@@ -41,7 +41,7 @@ const create = async (req, res, next) => {
       password,
       userId: admin.id,
     });
-    res.status(200).json({
+    res.status(201).json({
       data: admin,
       code: 201,
       message: "Admin created successfully",

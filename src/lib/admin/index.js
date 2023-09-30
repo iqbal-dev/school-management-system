@@ -61,7 +61,7 @@ const create = async ({
     designation,
   });
 
-  return { ...admin._doc, id: admin._id };
+  return { ...admin._doc, id: admin._id, adminId: id };
 };
 
 const updateOrCreate = async (

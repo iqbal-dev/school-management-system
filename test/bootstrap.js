@@ -14,6 +14,12 @@ beforeAll(async () => {
 }, 50000);
 
 afterAll(async () => {
-  // Close the Mongoose connection after all tests
+  const collections = mongoose.connection.collections;
+
+  for (const key in collections) {
+    const collection = collections[key];
+
+    await collection.deleteMany();
+  }
   await mongoose.connection.close();
 });
