@@ -40,6 +40,7 @@ The School Management API is a backend application for managing school-related d
 - swagger-ui-express
 - yamljs
 - supertest
+- nodemon
 
 ## Installation
 
