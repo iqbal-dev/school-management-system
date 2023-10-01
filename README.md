@@ -12,11 +12,34 @@ The School Management API is a backend application for managing school-related d
 - [School Management API](#school-management-api)
   - [Description](#description)
   - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Packages](#packages)
   - [Installation](#installation)
+  - [Usage](#usage)
+    - [Starting the API](#starting-the-api)
   - [API Documentation](#api-documentation)
   - [Environment Variables](#environment-variables)
   - [Configuration](#configuration)
   - [Testing](#testing)
+
+## Requirements
+
+- node(16.15.1 or later)
+- npm
+
+## Packages
+
+- bcryptjs
+- dotenv
+- express
+- express-openapi-validator
+- jest
+- jsonwebtoken
+- mongoose
+- morgan
+- swagger-ui-express
+- yamljs
+- supertest
 
 ## Installation
 
@@ -76,7 +99,7 @@ The API configuration is stored in the config directory. You can customize vario
 
 ## Testing
 
-To run the unit tests and generate code coverage reports:
+To run the unit and integration tests and generate code coverage reports:
 
 ```bash
 npm test
